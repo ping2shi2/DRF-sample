@@ -35,6 +35,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'middleware.custom_logging.CustomAttrMiddleware',
 ]
 
 ROOT_URLCONF = 'web_project.urls'
@@ -123,7 +124,12 @@ LOGGING = {
     'formatters': {
         'verbose': {
             'format': '%(levelname)s %(asctime)s %(module)s '
-                      '%(process)d %(thread)d %(message)s'
+                      '%(process)d %(thread)d user=%(user)s %(message)s'
+        },
+    },
+    'filters' : {
+        'custom': {
+            '()': 'middleware.custom_logging.CustomAttrFilter'
         },
     },
     'handlers': {
@@ -131,14 +137,15 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
+            'filters': ['custom']
         },
     },
     'loggers': {
-        'django.db.backends': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
         'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'django.db.backends': {
             'handlers': ['console'],
             'level': 'INFO',
         },

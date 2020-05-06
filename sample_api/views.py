@@ -48,3 +48,13 @@ class NestedListView(generics.ListAPIView):
         return self.get_paginated_response(serializer.data)
 
 
+class LoggingExceptListView(generics.ListAPIView):
+    """
+    ログでexception出力を確認するためのListView
+    """
+    def list(self, request, *args, **kwargs):
+        """
+        Exceptionをraiseするだけ
+        """
+        raise Exception('ログ確認用')
+
